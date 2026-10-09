@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Flores Moradas interactivas con mensaje romántico, animaciones mágicas y música.">
+  <title>Flores Moradas - Un Regalo Especial 💜</title>
+
+  <!-- Fuentes de Google Modernas y Elegantes -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Dancing+Script:wght@600;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Quicksand:wght@400;500;600;700&display=swap"
+    rel="stylesheet">
+
+  <!-- Estilos Principales -->
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body class="not-loaded">
+
+  <!-- Pantalla de Inicio / Bienvenida con Snoopy -->
+  <div class="intro-screen" id="introScreen">
+    <div class="intro-card">
+      <div class="intro-img-wrapper">
+        <img src="img/snoopy_purple.jpg" alt="Snoopy con flores moradas" class="intro-snoopy-img">
+      </div>
+      <h2>Un regalo especial para ti</h2>
+      <button class="intro-btn" id="startBtn" aria-label="Abrir flores" title="Abrir">
+        <span class="intro-arrow">➔</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Fondo de noche estrellada con Aurora Boreal Violeta -->
+  <div class="night"></div>
+  <div class="aurora-container" aria-hidden="true">
+    <div class="aurora aurora--1"></div>
+    <div class="aurora aurora--2"></div>
+    <div class="aurora aurora--3"></div>
+  </div>
+  <canvas id="star-canvas"></canvas>
+
+  <!-- Control de Sonido con Ondas Mágicas -->
+  <button class="mute-btn" id="muteToggle" aria-label="Silenciar o reproducir música">
+    <span class="sound-wave wave--1"></span>
+    <span class="sound-wave wave--2"></span>
+    <span id="muteIcon">🔊</span>
+  </button>
+
+  <!-- Audio de Fondo (Compatible con Android e iOS) -->
+  <audio id="bgMusic" preload="auto" playsinline loop>
+    <source src="audio/audio actual.mpeg" type="audio/mpeg">
+    <source src="audio/audio actual.mpeg" type="audio/mp3">
+    <source src="audio/audio2.mpeg" type="audio/mpeg">
+    <source src="audio/sonido.mpeg" type="audio/mpeg">
+  </audio>
+
+  <!-- Botón de apertura de la carta (solo ícono) -->
+  <button class="letter-btn" id="letterOpenBtn" aria-label="Abrir carta de amor" title="Abrir carta">
+    💌
+  </button>
+
+  <!-- Modal con Experiencia de Sobre Real y Sello de Lacre -->
+  <div class="letter-modal" id="letterModal" role="dialog" aria-modal="true" aria-label="Sobre con carta especial">
+    <div class="envelope-container" id="envelopeContainer">
+      
+      <!-- Sobre Real 3D -->
+      <div class="envelope" id="royalEnvelope">
+        <!-- Parte trasera del sobre -->
+        <div class="envelope-back"></div>
+        
+        <!-- Hoja / Carta deslizable dentro del sobre -->
+        <div class="letter-card" id="letterCard">
+          <button class="close-letter-btn" id="letterCloseBtn" aria-label="Cerrar carta" title="Cerrar">✕</button>
+          
+          <div class="letter-ornament top-ornament">❦ ✦ ❦</div>
+          <h3 class="letter-title">Para ti, mi persona especial</h3>
+          <div class="letter-divider"><span>✨ 💜 ✨</span></div>
+          
+          <div class="letter-body">
+            <p class="letter-intro">
+              Estas flores son para recordarte lo mucho que significas para mí. Aunque nunca se marchiten, ni siquiera ellas podrían expresar todo lo bonito que haces sentir a mi corazón cada día.
+            </p>
+            <div class="letter-highlight-wrapper">
+              <p class="letter-highlight">
+                “Eres esa personita que convierte mis días comunes en momentos especiales y mi mundo en un lugar mucho más bonito.”
+              </p>
+            </div>
+            <div class="letter-signature">
+              <span class="letter-sign-prefix">Con un cariño que crece cada día,</span>
+              <strong>Para ti, con todo mi corazoncito 💜🦋</strong>
+            </div>
+          </div>
+
+          <button class="put-back-btn" id="putBackBtn" type="button">✉️ Guardar en el sobre</button>
+        </div>
+
+        <!-- Solapas frontales del sobre con texturas de terciopelo púrpura y ribete dorado -->
+        <div class="envelope-front-left"></div>
+        <div class="envelope-front-right"></div>
+        <div class="envelope-front-bottom"></div>
+        
+        <!-- Solapa superior plegable en 3D -->
+        <div class="envelope-flap" id="envelopeFlap">
+          <div class="envelope-flap-inner"></div>
+        </div>
+
+        <!-- Sello de Lacre Morado Imperial y Oro en relieve -->
+        <button class="wax-seal" id="waxSeal" aria-label="Abrir sello de lacre" title="Toca el sello para abrir la carta">
+          <div class="wax-seal__rim"></div>
+          <div class="wax-seal__body">
+            <div class="wax-seal__stamp">
+              <span class="wax-seal__icon">💜</span>
+              <span class="wax-seal__crown">👑</span>
+            </div>
+          </div>
+          <div class="wax-seal__hint">Toca el sello ✨</div>
+        </button>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Título Superior con Mariposas Mágicas y Dedicatoria -->
+  <header class="title-wrapper" aria-label="Mensaje principal">
+    <div class="title-sparkle-crown">✦ ✨ ✦</div>
+
+    <div class="title-main-row">
+      <!-- Mariposa mágica izquierda -->
+      <div class="title-butterfly title-butterfly--left" aria-hidden="true">
+        <span class="t-wing t-wing--left"></span>
+        <span class="t-wing t-wing--right"></span>
+        <span class="t-body"></span>
+      </div>
+
+      <h1 class="title-main-text">Feliz día</h1>
+
+      <!-- Mariposa mágica derecha -->
+      <div class="title-butterfly title-butterfly--right" aria-hidden="true">
+        <span class="t-wing t-wing--left"></span>
+        <span class="t-wing t-wing--right"></span>
+        <span class="t-body"></span>
+      </div>
+    </div>
+
+    <!-- Píldora / Badge de Dedicatoria Elegante -->
+    <div class="title-dedication-pill">
+      <span class="pill-filigree">༺</span>
+      <span class="pill-text">Para ti, con todo mi amor</span>
+      <span class="pill-heart">💜</span>
+      <span class="pill-filigree">༻</span>
+    </div>
+  </header>
+
+  <!-- Mariposas Multicolores Flotantes -->
+  <div class="butterflies" aria-hidden="true">
+    <div class="butterfly butterfly--1"><span class="body"></span><span class="antenna"></span></div>
+    <div class="butterfly butterfly--2"><span class="body"></span><span class="antenna"></span></div>
+    <div class="butterfly butterfly--3"><span class="body"></span><span class="antenna"></span></div>
+    <div class="butterfly butterfly--4"><span class="body"></span><span class="antenna"></span></div>
+    <div class="butterfly butterfly--5"><span class="body"></span><span class="antenna"></span></div>
+    <div class="butterfly butterfly--6"><span class="body"></span><span class="antenna"></span></div>
+    <div class="butterfly butterfly--7"><span class="body"></span><span class="antenna"></span></div>
+    <div class="butterfly butterfly--8"><span class="body"></span><span class="antenna"></span></div>
+
+    <!-- Destellos mágicos -->
+    <span class="butterfly-sparkle sparkle--1"></span>
+    <span class="butterfly-sparkle sparkle--2"></span>
+    <span class="butterfly-sparkle sparkle--3"></span>
+    <span class="butterfly-sparkle sparkle--4"></span>
+    <span class="butterfly-sparkle sparkle--5"></span>
+  </div>
+
+  <!-- Ramo de Flores Moradas con Variedad Botánica Completa -->
+  <main class="flowers" id="flowersBouquet">
+
+    <!-- 1. Follaje Verde Base y Espadas Esmeralda -->
+    <div class="grow-ans" style="--d: 1.8s"><div class="flower__grass flower__grass--1"><div class="flower__grass--top"></div><div class="flower__grass--bottom"></div></div></div>
+    <div class="grow-ans" style="--d: 2.1s"><div class="flower__grass flower__grass--2"><div class="flower__grass--top"></div><div class="flower__grass--bottom"></div></div></div>
+    <div class="grow-ans" style="--d: 2.4s"><div class="flower__grass flower__grass--3"><div class="flower__grass--top"></div><div class="flower__grass--bottom"></div></div></div>
+    <div class="grow-ans" style="--d: 2.7s"><div class="flower__grass flower__grass--4"><div class="flower__grass--top"></div><div class="flower__grass--bottom"></div></div></div>
+    <div class="grow-ans" style="--d: 3.0s"><div class="flower__grass flower__grass--5"><div class="flower__grass--top"></div><div class="flower__grass--bottom"></div></div></div>
+    <div class="grow-ans" style="--d: 3.2s"><div class="flower__grass flower__grass--6"><div class="flower__grass--top"></div><div class="flower__grass--bottom"></div></div></div>
+    <div class="grow-ans" style="--d: 3.4s"><div class="flower__grass flower__grass--7"><div class="flower__grass--top"></div><div class="flower__grass--bottom"></div></div></div>
+
+    <!-- 2. Ramas de Eucalipto Silvestre Plateado con Tallo Estructurado -->
+    <div class="eucalyptus eucalyptus--left">
+      <div class="euc-stem">
+        <span class="euc-leaf l--1"></span><span class="euc-leaf l--2"></span>
+        <span class="euc-leaf l--3"></span><span class="euc-leaf l--4"></span>
+        <span class="euc-leaf l--5"></span><span class="euc-leaf l--6"></span>
+      </div>
+    </div>
+    <div class="eucalyptus eucalyptus--right">
+      <div class="euc-stem">
+        <span class="euc-leaf l--1"></span><span class="euc-leaf l--2"></span>
+        <span class="euc-leaf l--3"></span><span class="euc-leaf l--4"></span>
+        <span class="euc-leaf l--5"></span><span class="euc-leaf l--6"></span>
+      </div>
+    </div>
+
+    <!-- 3. 🪻 Espigas de Lavanda Francesa con Tallos Florales -->
+    <div class="flower flower--lavender flower--lavender-1" data-name="Lavanda Francesa">
+      <div class="lavender__stem">
+        <span class="lavender__floret f--1"></span><span class="lavender__floret f--2"></span>
+        <span class="lavender__floret f--3"></span><span class="lavender__floret f--4"></span>
+        <span class="lavender__floret f--5"></span><span class="lavender__floret f--6"></span>
+        <span class="lavender__floret f--7"></span><span class="lavender__tip"></span>
+      </div>
+    </div>
+    <div class="flower flower--lavender flower--lavender-2" data-name="Lavanda Francesa">
+      <div class="lavender__stem">
+        <span class="lavender__floret f--1"></span><span class="lavender__floret f--2"></span>
+        <span class="lavender__floret f--3"></span><span class="lavender__floret f--4"></span>
+        <span class="lavender__floret f--5"></span><span class="lavender__floret f--6"></span>
+        <span class="lavender__tip"></span>
+      </div>
+    </div>
+    <div class="flower flower--lavender flower--lavender-3" data-name="Lavanda Silvestre">
+      <div class="lavender__stem">
+        <span class="lavender__floret f--1"></span><span class="lavender__floret f--2"></span>
+        <span class="lavender__floret f--3"></span><span class="lavender__floret f--4"></span>
+        <span class="lavender__floret f--5"></span><span class="lavender__floret f--6"></span>
+        <span class="lavender__floret f--7"></span><span class="lavender__tip"></span>
+      </div>
+    </div>
+    <div class="flower flower--lavender flower--lavender-4" data-name="Lavanda Silvestre">
+      <div class="lavender__stem">
+        <span class="lavender__floret f--1"></span><span class="lavender__floret f--2"></span>
+        <span class="lavender__floret f--3"></span><span class="lavender__floret f--4"></span>
+        <span class="lavender__floret f--5"></span><span class="lavender__tip"></span>
+      </div>
+    </div>
+
+    <!-- 4. ✨ Ramitas de Paniculata / Gypsophila con Tallos Conectados -->
+    <div class="gypsophila gypsophila--1">
+      <div class="gyp-stem">
+        <span class="gyp-dot d--1"></span><span class="gyp-dot d--2"></span>
+        <span class="gyp-dot d--3"></span><span class="gyp-dot d--4"></span>
+        <span class="gyp-dot d--5"></span>
+      </div>
+    </div>
+    <div class="gypsophila gypsophila--2">
+      <div class="gyp-stem">
+        <span class="gyp-dot d--1"></span><span class="gyp-dot d--2"></span>
+        <span class="gyp-dot d--3"></span><span class="gyp-dot d--4"></span>
+        <span class="gyp-dot d--5"></span>
+      </div>
+    </div>
+
+    <!-- 5. 🌺 FLOR 1: Gran Peonía Real Morada (Centro Cúspide) -->
+    <div class="flower flower--1 flower--peony" data-name="Peonía Real">
+      <div class="flower__leafs">
+        <span class="dew-drop" style="top: 12%; left: 28%;"></span>
+        <span class="dew-drop" style="top: 38%; right: 22%; animation-delay: 1.8s;"></span>
+        <div class="flower__leaf flower__leaf--out flower__leaf--out-1"></div>
+        <div class="flower__leaf flower__leaf--out flower__leaf--out-2"></div>
+        <div class="flower__leaf flower__leaf--out flower__leaf--out-3"></div>
+        <div class="flower__leaf flower__leaf--out flower__leaf--out-4"></div>
+        <div class="flower__leaf flower__leaf--mid flower__leaf--mid-1"></div>
+        <div class="flower__leaf flower__leaf--mid flower__leaf--mid-2"></div>
+        <div class="flower__leaf flower__leaf--mid flower__leaf--mid-3"></div>
+        <div class="flower__leaf flower__leaf--in flower__leaf--in-1"></div>
+        <div class="flower__leaf flower__leaf--in flower__leaf--in-2"></div>
+        <div class="flower__center">
+          <span class="flower__stamen s--1"></span>
+          <span class="flower__stamen s--2"></span>
+          <span class="flower__stamen s--3"></span>
+          <span class="flower__core-glow"></span>
+        </div>
+        <div class="flower__light flower__light--1"></div>
+        <div class="flower__light flower__light--2"></div>
+        <div class="flower__light flower__light--3"></div>
+        <div class="flower__light flower__light--4"></div>
+      </div>
+      <div class="flower__line">
+        <div class="flower__line__leaf flower__line__leaf--1"></div>
+        <div class="flower__line__leaf flower__line__leaf--2"></div>
+        <div class="flower__line__leaf flower__line__leaf--3"></div>
+        <div class="flower__line__leaf flower__line__leaf--4"></div>
+      </div>
+    </div>
+
+    <!-- 6. 🌸 FLOR 2: Orquídea Violeta Exótica (Derecha) -->
+    <div class="flower flower--2 flower--orchid" data-name="Orquídea Amatista">
+      <div class="flower__leafs">
+        <span class="dew-drop" style="top: 22%; left: 24%; animation-delay: 0.9s;"></span>
+        <div class="orchid__sepal sepal--top"></div>
+        <div class="orchid__sepal sepal--left"></div>
+        <div class="orchid__sepal sepal--right"></div>
+        <div class="orchid__petal petal--left"></div>
+        <div class="orchid__petal petal--right"></div>
+        <div class="orchid__lip">
+          <span class="lip__crest"></span>
+          <span class="lip__throat"></span>
+        </div>
+        <div class="flower__light flower__light--1"></div>
+        <div class="flower__light flower__light--2"></div>
+      </div>
+      <div class="flower__line">
+        <div class="flower__line__leaf flower__line__leaf--1"></div>
+        <div class="flower__line__leaf flower__line__leaf--2"></div>
+        <div class="flower__line__leaf flower__line__leaf--3"></div>
+        <div class="flower__line__leaf flower__line__leaf--4"></div>
+      </div>
+    </div>
+
+    <!-- 7. 🌸 FLOR 3: Orquídea Violeta Exótica (Izquierda) -->
+    <div class="flower flower--3 flower--orchid" data-name="Orquídea Real">
+      <div class="flower__leafs">
+        <span class="dew-drop" style="top: 25%; right: 26%; animation-delay: 1.4s;"></span>
+        <div class="orchid__sepal sepal--top"></div>
+        <div class="orchid__sepal sepal--left"></div>
+        <div class="orchid__sepal sepal--right"></div>
+        <div class="orchid__petal petal--left"></div>
+        <div class="orchid__petal petal--right"></div>
+        <div class="orchid__lip">
+          <span class="lip__crest"></span>
+          <span class="lip__throat"></span>
+        </div>
+        <div class="flower__light flower__light--1"></div>
+        <div class="flower__light flower__light--2"></div>
+      </div>
+      <div class="flower__line">
+        <div class="flower__line__leaf flower__line__leaf--1"></div>
+        <div class="flower__line__leaf flower__line__leaf--2"></div>
+        <div class="flower__line__leaf flower__line__leaf--3"></div>
+        <div class="flower__line__leaf flower__line__leaf--4"></div>
+      </div>
+    </div>
+
+    <!-- 8. 🌼 FLOR 4: Margarita Silvestre / Áster Morado con Centro Dorado (Derecha) -->
+    <div class="flower flower--4 flower--aster" data-name="Margarita Morada">
+      <div class="flower__leafs">
+        <span class="dew-drop" style="top: 15%; left: 30%; animation-delay: 1.2s;"></span>
+        <div class="aster__head">
+          <span class="aster__petal a--1"></span><span class="aster__petal a--2"></span>
+          <span class="aster__petal a--3"></span><span class="aster__petal a--4"></span>
+          <span class="aster__petal a--5"></span><span class="aster__petal a--6"></span>
+          <span class="aster__petal a--7"></span><span class="aster__petal a--8"></span>
+          <span class="aster__petal a--9"></span><span class="aster__petal a--10"></span>
+          <span class="aster__petal a--11"></span><span class="aster__petal a--12"></span>
+          <span class="aster__petal a--13"></span><span class="aster__petal a--14"></span>
+          <span class="aster__petal a--15"></span><span class="aster__petal a--16"></span>
+          <div class="aster__center"><span class="aster__core-ring"></span></div>
+        </div>
+        <div class="flower__light flower__light--1"></div>
+      </div>
+      <div class="flower__line">
+        <div class="flower__line__leaf flower__line__leaf--1"></div>
+        <div class="flower__line__leaf flower__line__leaf--3"></div>
+      </div>
+    </div>
+
+    <!-- 9. 🌼 FLOR 5: Margarita Silvestre / Áster Morado con Centro Dorado (Izquierda) -->
+    <div class="flower flower--5 flower--aster" data-name="Margarita Morada">
+      <div class="flower__leafs">
+        <span class="dew-drop" style="top: 20%; right: 28%; animation-delay: 2.1s;"></span>
+        <div class="aster__head">
+          <span class="aster__petal a--1"></span><span class="aster__petal a--2"></span>
+          <span class="aster__petal a--3"></span><span class="aster__petal a--4"></span>
+          <span class="aster__petal a--5"></span><span class="aster__petal a--6"></span>
+          <span class="aster__petal a--7"></span><span class="aster__petal a--8"></span>
+          <span class="aster__petal a--9"></span><span class="aster__petal a--10"></span>
+          <span class="aster__petal a--11"></span><span class="aster__petal a--12"></span>
+          <span class="aster__petal a--13"></span><span class="aster__petal a--14"></span>
+          <span class="aster__petal a--15"></span><span class="aster__petal a--16"></span>
+          <div class="aster__center"><span class="aster__core-ring"></span></div>
+        </div>
+        <div class="flower__light flower__light--2"></div>
+      </div>
+      <div class="flower__line">
+        <div class="flower__line__leaf flower__line__leaf--1"></div>
+        <div class="flower__line__leaf flower__line__leaf--3"></div>
+      </div>
+    </div>
+
+    <!-- 10. 🌹 FLOR 6: Rosa de Terciopelo Púrpura (Centro Frontal) -->
+    <div class="flower flower--6 flower--rose" data-name="Rosa Terciopelo">
+      <div class="flower__leafs">
+        <span class="dew-drop" style="top: 28%; left: 32%; animation-delay: 2.2s;"></span>
+        <span class="dew-drop" style="top: 55%; right: 28%; animation-delay: 3.1s;"></span>
+        <div class="rose__petal r--1"></div>
+        <div class="rose__petal r--2"></div>
+        <div class="rose__petal r--3"></div>
+        <div class="rose__petal r--4"></div>
+        <div class="rose__petal r--5"></div>
+        <div class="rose__spiral"></div>
+        <div class="flower__light flower__light--1"></div>
+        <div class="flower__light flower__light--2"></div>
+      </div>
+      <div class="flower__line">
+        <div class="flower__line__leaf flower__line__leaf--1"></div>
+        <div class="flower__line__leaf flower__line__leaf--3"></div>
+      </div>
+    </div>
+
+    <!-- 11. 🌷 FLOR 7: Tulipán Violeta Alto Derecho -->
+    <div class="flower flower--7 flower--tulip" data-name="Tulipán Violeta">
+      <div class="flower__leafs">
+        <span class="dew-drop" style="top: 18%; right: 28%; animation-delay: 1.6s;"></span>
+        <div class="tulip__petal t--left"></div>
+        <div class="tulip__petal t--right"></div>
+        <div class="tulip__petal t--center"></div>
+        <div class="tulip__rim"></div>
+        <div class="flower__light flower__light--1"></div>
+      </div>
+      <div class="flower__line">
+        <div class="flower__line__leaf flower__line__leaf--1"></div>
+        <div class="flower__line__leaf flower__line__leaf--3"></div>
+      </div>
+    </div>
+
+    <!-- 12. 🌷 FLOR 8: Tulipán Violeta Alto Izquierdo -->
+    <div class="flower flower--8 flower--tulip" data-name="Tulipán Imperial">
+      <div class="flower__leafs">
+        <span class="dew-drop" style="top: 20%; left: 30%; animation-delay: 2.6s;"></span>
+        <div class="tulip__petal t--left"></div>
+        <div class="tulip__petal t--right"></div>
+        <div class="tulip__petal t--center"></div>
+        <div class="tulip__rim"></div>
+        <div class="flower__light flower__light--2"></div>
+      </div>
+      <div class="flower__line">
+        <div class="flower__line__leaf flower__line__leaf--1"></div>
+        <div class="flower__line__leaf flower__line__leaf--3"></div>
+      </div>
+    </div>
+
+    <!-- 13. 🌹 FLOR 9: Rosa Amatista (Lateral Derecho) -->
+    <div class="flower flower--9 flower--rose" data-name="Rosa Amatista">
+      <div class="flower__leafs">
+        <span class="dew-drop" style="top: 32%; left: 36%; animation-delay: 1.1s;"></span>
+        <div class="rose__petal r--1"></div>
+        <div class="rose__petal r--2"></div>
+        <div class="rose__petal r--3"></div>
+        <div class="rose__spiral"></div>
+        <div class="flower__light flower__light--1"></div>
+      </div>
+      <div class="flower__line">
+        <div class="flower__line__leaf flower__line__leaf--1"></div>
+        <div class="flower__line__leaf flower__line__leaf--3"></div>
+      </div>
+    </div>
+
+    <!-- 14. 🌹 FLOR 10: Rosa Amatista (Lateral Izquierdo) -->
+    <div class="flower flower--10 flower--rose" data-name="Rosa Amatista">
+      <div class="flower__leafs">
+        <span class="dew-drop" style="top: 34%; right: 34%; animation-delay: 2.8s;"></span>
+        <div class="rose__petal r--1"></div>
+        <div class="rose__petal r--2"></div>
+        <div class="rose__petal r--3"></div>
+        <div class="rose__spiral"></div>
+        <div class="flower__light flower__light--2"></div>
+      </div>
+      <div class="flower__line">
+        <div class="flower__line__leaf flower__line__leaf--1"></div>
+        <div class="flower__line__leaf flower__line__leaf--3"></div>
+      </div>
+    </div>
+
+    <!-- 15. 🌺 FLOR 11: Mini Peonía Delantera Derecha -->
+    <div class="flower flower--11 flower--peony" data-name="Peonía Lila">
+      <div class="flower__leafs">
+        <div class="flower__leaf flower__leaf--out flower__leaf--out-1"></div>
+        <div class="flower__leaf flower__leaf--out flower__leaf--out-2"></div>
+        <div class="flower__leaf flower__leaf--mid flower__leaf--mid-1"></div>
+        <div class="flower__leaf flower__leaf--in flower__leaf--in-1"></div>
+        <div class="flower__light flower__light--1"></div>
+      </div>
+      <div class="flower__line">
+        <div class="flower__line__leaf flower__line__leaf--1"></div>
+        <div class="flower__line__leaf flower__line__leaf--3"></div>
+      </div>
+    </div>
+
+    <!-- 16. 🌺 FLOR 12: Mini Peonía Delantera Izquierda -->
+    <div class="flower flower--12 flower--peony" data-name="Peonía Lila">
+      <div class="flower__leafs">
+        <div class="flower__leaf flower__leaf--out flower__leaf--out-1"></div>
+        <div class="flower__leaf flower__leaf--out flower__leaf--out-2"></div>
+        <div class="flower__leaf flower__leaf--mid flower__leaf--mid-1"></div>
+        <div class="flower__leaf flower__leaf--in flower__leaf--in-1"></div>
+        <div class="flower__light flower__light--2"></div>
+      </div>
+      <div class="flower__line">
+        <div class="flower__line__leaf flower__line__leaf--1"></div>
+        <div class="flower__line__leaf flower__line__leaf--3"></div>
+      </div>
+    </div>
+
+    <!-- 17. 🌸 FLOR 13: Orquídea Posterior Izquierda -->
+    <div class="flower flower--13 flower--orchid" data-name="Orquídea Violeta">
+      <div class="flower__leafs">
+        <div class="orchid__sepal sepal--top"></div>
+        <div class="orchid__petal petal--left"></div>
+        <div class="orchid__petal petal--right"></div>
+        <div class="orchid__lip"></div>
+      </div>
+      <div class="flower__line">
+        <div class="flower__line__leaf flower__line__leaf--1"></div>
+        <div class="flower__line__leaf flower__line__leaf--3"></div>
+      </div>
+    </div>
+
+    <!-- 18. 🌸 FLOR 14: Orquídea Posterior Derecha -->
+    <div class="flower flower--14 flower--orchid" data-name="Orquídea Violeta">
+      <div class="flower__leafs">
+        <div class="orchid__sepal sepal--top"></div>
+        <div class="orchid__petal petal--left"></div>
+        <div class="orchid__petal petal--right"></div>
+        <div class="orchid__lip"></div>
+      </div>
+      <div class="flower__line">
+        <div class="flower__line__leaf flower__line__leaf--1"></div>
+        <div class="flower__line__leaf flower__line__leaf--3"></div>
+      </div>
+    </div>
+
+    <!-- 19. 🌷 FLOR 15: Tulipán Profundo Izquierdo -->
+    <div class="flower flower--15 flower--tulip" data-name="Tulipán Morado">
+      <div class="flower__leafs">
+        <div class="tulip__petal t--left"></div>
+        <div class="tulip__petal t--right"></div>
+      </div>
+      <div class="flower__line">
+        <div class="flower__line__leaf flower__line__leaf--1"></div>
+        <div class="flower__line__leaf flower__line__leaf--3"></div>
+      </div>
+    </div>
+
+    <!-- 20. 🌷 FLOR 16: Tulipán Profundo Derecho -->
+    <div class="flower flower--16 flower--tulip" data-name="Tulipán Morado">
+      <div class="flower__leafs">
+        <div class="tulip__petal t--left"></div>
+        <div class="tulip__petal t--right"></div>
+      </div>
+      <div class="flower__line">
+        <div class="flower__line__leaf flower__line__leaf--1"></div>
+        <div class="flower__line__leaf flower__line__leaf--3"></div>
+      </div>
+    </div>
+
+    <!-- 21. 🌼 FLOR 17: Margarita Silvestre Frontal Izquierda -->
+    <div class="flower flower--17 flower--aster" data-name="Margarita Estrella">
+      <div class="flower__leafs">
+        <div class="aster__head">
+          <span class="aster__petal a--1"></span><span class="aster__petal a--3"></span>
+          <span class="aster__petal a--5"></span><span class="aster__petal a--7"></span>
+          <span class="aster__petal a--9"></span><span class="aster__petal a--11"></span>
+          <span class="aster__petal a--13"></span><span class="aster__petal a--15"></span>
+          <div class="aster__center"><span class="aster__core-ring"></span></div>
+        </div>
+      </div>
+      <div class="flower__line">
+        <div class="flower__line__leaf flower__line__leaf--1"></div>
+        <div class="flower__line__leaf flower__line__leaf--3"></div>
+      </div>
+    </div>
+
+    <!-- 22. 🌼 FLOR 18: Margarita Silvestre Frontal Derecha -->
+    <div class="flower flower--18 flower--aster" data-name="Margarita Estrella">
+      <div class="flower__leafs">
+        <div class="aster__head">
+          <span class="aster__petal a--2"></span><span class="aster__petal a--4"></span>
+          <span class="aster__petal a--6"></span><span class="aster__petal a--8"></span>
+          <span class="aster__petal a--10"></span><span class="aster__petal a--12"></span>
+          <span class="aster__petal a--14"></span><span class="aster__petal a--16"></span>
+          <div class="aster__center"><span class="aster__core-ring"></span></div>
+        </div>
+      </div>
+      <div class="flower__line">
+        <div class="flower__line__leaf flower__line__leaf--1"></div>
+        <div class="flower__line__leaf flower__line__leaf--3"></div>
+      </div>
+    </div>
+
+    <!-- 23. 🌹 FLOR 19: Capullo de Rosa Izquierdo -->
+    <div class="flower flower--19 flower--rose" data-name="Capullo de Rosa">
+      <div class="flower__leafs">
+        <div class="rose__petal r--1"></div>
+        <div class="rose__spiral"></div>
+      </div>
+      <div class="flower__line">
+        <div class="flower__line__leaf flower__line__leaf--1"></div>
+        <div class="flower__line__leaf flower__line__leaf--3"></div>
+      </div>
+    </div>
+
+    <!-- 24. 🌹 FLOR 20: Capullo de Rosa Derecho -->
+    <div class="flower flower--20 flower--rose" data-name="Capullo de Rosa">
+      <div class="flower__leafs">
+        <div class="rose__petal r--2"></div>
+        <div class="rose__spiral"></div>
+      </div>
+      <div class="flower__line">
+        <div class="flower__line__leaf flower__line__leaf--1"></div>
+        <div class="flower__line__leaf flower__line__leaf--3"></div>
+      </div>
+    </div>
+
+    <!-- 25. 🌺 FLOR 21: Peonía Amatista (Bolsillo Superior Izquierdo) -->
+    <div class="flower flower--21 flower--peony" data-name="Peonía Amatista">
+      <div class="flower__leafs">
+        <div class="flower__leaf flower__leaf--out flower__leaf--out-1"></div>
+        <div class="flower__leaf flower__leaf--out flower__leaf--out-3"></div>
+        <div class="flower__leaf flower__leaf--mid flower__leaf--mid-1"></div>
+        <div class="flower__leaf flower__leaf--in flower__leaf--in-1"></div>
+        <div class="flower__center">
+          <span class="flower__stamen s--1"></span>
+          <span class="flower__stamen s--2"></span>
+          <span class="flower__core-glow"></span>
+        </div>
+      </div>
+      <div class="flower__line">
+        <div class="flower__line__leaf flower__line__leaf--1"></div>
+        <div class="flower__line__leaf flower__line__leaf--3"></div>
+      </div>
+    </div>
+
+    <!-- 26. 🌺 FLOR 22: Peonía Amatista (Bolsillo Superior Derecho) -->
+    <div class="flower flower--22 flower--peony" data-name="Peonía Amatista">
+      <div class="flower__leafs">
+        <div class="flower__leaf flower__leaf--out flower__leaf--out-2"></div>
+        <div class="flower__leaf flower__leaf--out flower__leaf--out-4"></div>
+        <div class="flower__leaf flower__leaf--mid flower__leaf--mid-2"></div>
+        <div class="flower__leaf flower__leaf--in flower__leaf--in-2"></div>
+        <div class="flower__center">
+          <span class="flower__stamen s--2"></span>
+          <span class="flower__stamen s--3"></span>
+          <span class="flower__core-glow"></span>
+        </div>
+      </div>
+      <div class="flower__line">
+        <div class="flower__line__leaf flower__line__leaf--1"></div>
+        <div class="flower__line__leaf flower__line__leaf--3"></div>
+      </div>
+    </div>
+
+    <!-- 27. 🌷 FLOR 23: Tulipán Imperial (Bolsillo Medio Izquierdo) -->
+    <div class="flower flower--23 flower--tulip" data-name="Tulipán Real">
+      <div class="flower__leafs">
+        <div class="tulip__petal t--left"></div>
+        <div class="tulip__petal t--center"></div>
+        <div class="tulip__petal t--right"></div>
+        <div class="tulip__rim"></div>
+      </div>
+      <div class="flower__line">
+        <div class="flower__line__leaf flower__line__leaf--1"></div>
+        <div class="flower__line__leaf flower__line__leaf--3"></div>
+      </div>
+    </div>
+
+    <!-- 28. 🌷 FLOR 24: Tulipán Imperial (Bolsillo Medio Derecho) -->
+    <div class="flower flower--24 flower--tulip" data-name="Tulipán Real">
+      <div class="flower__leafs">
+        <div class="tulip__petal t--left"></div>
+        <div class="tulip__petal t--center"></div>
+        <div class="tulip__petal t--right"></div>
+        <div class="tulip__rim"></div>
+      </div>
+      <div class="flower__line">
+        <div class="flower__line__leaf flower__line__leaf--1"></div>
+        <div class="flower__line__leaf flower__line__leaf--3"></div>
+      </div>
+    </div>
+
+    <!-- 29. 🌼 FLOR 25: Margarita Real (Hueco Lateral Izquierdo) -->
+    <div class="flower flower--25 flower--aster" data-name="Margarita Real">
+      <div class="flower__leafs">
+        <div class="aster__head">
+          <div class="aster__petal a--1"></div><div class="aster__petal a--2"></div>
+          <div class="aster__petal a--3"></div><div class="aster__petal a--4"></div>
+          <div class="aster__petal a--5"></div><div class="aster__petal a--6"></div>
+          <div class="aster__petal a--7"></div><div class="aster__petal a--8"></div>
+          <div class="aster__petal a--9"></div><div class="aster__petal a--10"></div>
+          <div class="aster__petal a--11"></div><div class="aster__petal a--12"></div>
+          <div class="aster__petal a--13"></div><div class="aster__petal a--14"></div>
+          <div class="aster__petal a--15"></div><div class="aster__petal a--16"></div>
+          <div class="aster__center"><div class="aster__core-ring"></div></div>
+        </div>
+      </div>
+      <div class="flower__line">
+        <div class="flower__line__leaf flower__line__leaf--1"></div>
+        <div class="flower__line__leaf flower__line__leaf--3"></div>
+      </div>
+    </div>
+
+    <!-- 30. 🌼 FLOR 26: Margarita Real (Hueco Lateral Derecho) -->
+    <div class="flower flower--26 flower--aster" data-name="Margarita Real">
+      <div class="flower__leafs">
+        <div class="aster__head">
+          <div class="aster__petal a--1"></div><div class="aster__petal a--2"></div>
+          <div class="aster__petal a--3"></div><div class="aster__petal a--4"></div>
+          <div class="aster__petal a--5"></div><div class="aster__petal a--6"></div>
+          <div class="aster__petal a--7"></div><div class="aster__petal a--8"></div>
+          <div class="aster__petal a--9"></div><div class="aster__petal a--10"></div>
+          <div class="aster__petal a--11"></div><div class="aster__petal a--12"></div>
+          <div class="aster__petal a--13"></div><div class="aster__petal a--14"></div>
+          <div class="aster__petal a--15"></div><div class="aster__petal a--16"></div>
+          <div class="aster__center"><div class="aster__core-ring"></div></div>
+        </div>
+      </div>
+      <div class="flower__line">
+        <div class="flower__line__leaf flower__line__leaf--1"></div>
+        <div class="flower__line__leaf flower__line__leaf--3"></div>
+      </div>
+    </div>
+
+    <!-- 31. 🌹 FLOR 27: Rosa Imperial Central (Corazón de Ramo) -->
+    <div class="flower flower--27 flower--rose" data-name="Rosa Imperial">
+      <div class="flower__leafs">
+        <div class="rose__petal r--1"></div>
+        <div class="rose__petal r--2"></div>
+        <div class="rose__petal r--5"></div>
+        <div class="rose__spiral"></div>
+      </div>
+      <div class="flower__line">
+        <div class="flower__line__leaf flower__line__leaf--1"></div>
+        <div class="flower__line__leaf flower__line__leaf--3"></div>
+      </div>
+    </div>
+
+    <!-- 32. 🌸 FLOR 28: Orquídea Mágica (Relleno Centro-Fondo) -->
+    <div class="flower flower--28 flower--orchid" data-name="Orquídea Mágica">
+      <div class="flower__leafs">
+        <div class="orchid__sepal sepal--top"></div>
+        <div class="orchid__sepal sepal--left"></div>
+        <div class="orchid__sepal sepal--right"></div>
+        <div class="orchid__petal petal--left"></div>
+        <div class="orchid__petal petal--right"></div>
+        <div class="orchid__lip"><span class="lip__throat"></span></div>
+      </div>
+      <div class="flower__line">
+        <div class="flower__line__leaf flower__line__leaf--1"></div>
+        <div class="flower__line__leaf flower__line__leaf--3"></div>
+      </div>
+    </div>
+
+    <!-- ✨ Luces de Hadas Mágicas Entrelazadas (Fairy Lights) -->
+    <div class="fairy-lights" aria-hidden="true">
+      <span class="fairy-light fl--1" style="--fl-top: 18%; --fl-left: 48%; --fl-delay: 0s;"></span>
+      <span class="fairy-light fl--2" style="--fl-top: 26%; --fl-left: 32%; --fl-delay: 1.2s;"></span>
+      <span class="fairy-light fl--3" style="--fl-top: 28%; --fl-left: 68%; --fl-delay: 0.6s;"></span>
+      <span class="fairy-light fl--4" style="--fl-top: 38%; --fl-left: 22%; --fl-delay: 2.1s;"></span>
+      <span class="fairy-light fl--5" style="--fl-top: 36%; --fl-left: 52%; --fl-delay: 1.7s;"></span>
+      <span class="fairy-light fl--6" style="--fl-top: 39%; --fl-left: 78%; --fl-delay: 0.9s;"></span>
+      <span class="fairy-light fl--7" style="--fl-top: 48%; --fl-left: 36%; --fl-delay: 2.4s;"></span>
+      <span class="fairy-light fl--8" style="--fl-top: 47%; --fl-left: 64%; --fl-delay: 0.3s;"></span>
+      <span class="fairy-light fl--9" style="--fl-top: 58%; --fl-left: 28%; --fl-delay: 1.5s;"></span>
+      <span class="fairy-light fl--10" style="--fl-top: 56%; --fl-left: 50%; --fl-delay: 2.8s;"></span>
+      <span class="fairy-light fl--11" style="--fl-top: 59%; --fl-left: 72%; --fl-delay: 1.1s;"></span>
+      <span class="fairy-light fl--12" style="--fl-top: 68%; --fl-left: 44%; --fl-delay: 0.7s;"></span>
+      <span class="fairy-light fl--13" style="--fl-top: 69%; --fl-left: 58%; --fl-delay: 2.3s;"></span>
+      <span class="fairy-light fl--14" style="--fl-top: 76%; --fl-left: 50%; --fl-delay: 1.9s;"></span>
+    </div>
+
+    <!-- 🎀 Envoltura y Lazo de Seda de Alta Costura del Ramo -->
+    <div class="bouquet-wrap">
+      <div class="wrap-tissue wrap-tissue--back"></div>
+      <div class="wrap-tissue wrap-tissue--left"></div>
+      <div class="wrap-tissue wrap-tissue--right"></div>
+      <div class="wrap-paper wrap-paper--back"></div>
+      <div class="wrap-paper wrap-paper--left"></div>
+      <div class="wrap-paper wrap-paper--right"></div>
+      <div class="wrap-paper wrap-paper--center-fold"></div>
+      <div class="wrap-ribbon">
+        <div class="satin-knot"></div>
+        <div class="satin-loop satin-loop--left-top"></div>
+        <div class="satin-loop satin-loop--right-top"></div>
+        <div class="satin-loop satin-loop--left-bottom"></div>
+        <div class="satin-loop satin-loop--right-bottom"></div>
+        <div class="satin-tail satin-tail--left"></div>
+        <div class="satin-tail satin-tail--right"></div>
+        <div class="satin-gem"></div>
+        <div class="satin-tag">
+          <span class="tag-pin"></span>
+          <span class="tag-text">Para ti 💜</span>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Lógica e Interactividad JavaScript -->
+  <script src="js/script.js"></script>
+</body>
+
+</html>

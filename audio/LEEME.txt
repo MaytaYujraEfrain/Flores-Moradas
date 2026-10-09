@@ -1,0 +1,8 @@
+Coloca aquí tu canción favorita en formato MP3 o WAV con el nombre:
+musica.mp3 (o cancion.mp3)
+
+Ruta predeterminada configurada:
+audio/musica.mp3
+
+¡La página reproducirá automáticamente este archivo cuando des clic en el botón de música!
+Si no encuentra el archivo o aún no lo has colocado, usará automáticamente el sintetizador suave de respaldo.
